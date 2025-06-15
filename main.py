@@ -23,61 +23,73 @@ def je_spravne_cislo(tip):
           len(tip) == 4 and
           tip.isdigit() and
           len(set(tip)) ==  len(tip) and
-          tip [0] != '0'
+          tip [0] != '0' and
+          all(cif in '0123456789' for cif in tip)
      )
-
-
-print("Ahoj.")
-print(oddelovac)
-print("Vítej v programu hádání tajného čísla.")
-print("HÁDEJ ČTYŘ-místné ČÍSLA: JE TO SKORO JAKO HÁDAT PIN OD TELEFONU.")
-print("Jsou to čtyři číslice (cifry).A neopakují se." \
-"VYBÍREJ Z ČÍSEL 'jedna až děvět' -> jsou to čísla 1, 2, 3, 4, 5, 6, 7, 8, 9." \
-"A bacha, nula se tam nepoužije")
-print(oddelovac)
-
-
-
-
-print("Právě je vygenerováno číslo, které máš hádat.")
-
-#
-print(oddelovac)
 # --
-# pocitani tipu byku a krav
+# zprava co za chybu
+def ziskej_chybovou_zpravu(tip):
+    if len(tip) != 4:
+        return "Musíš zadat přesně čtyři číslice!"
+    if not tip.isdigit():
+        return "Zadej pouze číslice 0-9!"
+    if tip[0] == '0':
+        return "První cifra nesmí být nula!"
+    if len(set(tip)) != 4:
+        return "Číslice se nesmí opakovat!"
+    return "Neplatný vstup!"
+# --
+# pocitani tipu
 def spocitat_tip(tip, tajne_cislo):
     bulls = 0
     cows = 0
-    for i in range(4):
-        if tip[i] == tajne_cislo[i]:
-            bulls += 1
-        elif tip[i] in tajne_cislo:
-            cows += 1
+    bulls = sum(tip_cislo == tajne_cislo_cifra for tip_cislo, tajne_cislo_cifra in zip(tip, tajne_cislo))
+    cows = sum(tip_cislo in tajne_cislo for tip_cislo in tip) - bulls
     return bulls, cows
-
+# --
 # vysledek pocitani
 def vysledek_hrani(bulls, cows):
     return (
-        f"{bulls} {'býk' if bulls == 1 else 'býci'} "
-        f"{cows} {'kráva' if cows == 1 else 'krávy'}"
+        f"{bulls} {'býk' if bulls == 1 else 'býci' if bulls != 0 else 'býků'}, " 
+        f"{cows} {'kráva' if cows == 1 else 'krávy' if cows !=0 else 'krav'}"
     )
-
-# hlavní hra
+# --
+# hra
 def hlavni_hra():
-    print("Ahoj!")
+    print("Ahoj.")
     print(oddelovac)
-    print("Vítej v aplikaci na hádání tajného čísla/PINu. 😉")
-    print("HÁDEJ ČTYŘ-místné ČÍSLO: JE TO SKORO JAKO HÁDAT PIN OD TELEFONU.")
-    print("Akorát má to pravidla:\
-          První cifra není 0 (nula)\
-          Další mohou být 0 (nula)\
-          Pokuk uhádneš - uloží se ti správný tip. A hádej dál, dokud neuhodneš všechny.")
-    print("A jedem. Hra začíná.")
+    print("👋 Vítej v programu na hádání tajného čísla.")
+    print("Možná to znáš jako hru Bulls & Cows. ale tady je česká verze. 🐂 & 🐄 .cz ")
+    print("'Bejk' -> Správná číslice na správném místě.\n'Kravička' -> Správná číslice na špatném místě.")
+    print("HÁDÁŠ ČÍSLO,...\nJE TO SKORO JAKO HÁDAT PIN NA TELEFONU.😉 ")
+    print("Jsou to čtyři číslice ('cifry').A neopakují se.\nVYBÍRÁŠ Z ČÍSEL 'JEDNA' až 'DEVĚT'")
+    print("Jsou to čísla 1, 2, 3, 4, 5, 6, 7, 8, 9.")
+    print("A bacha, nula se tam nesmí použít jako první cifra, jinak druhá až čtvrtá cifra ano.")
     print(oddelovac)
+    print("Právě se vygenerováno číslo, které máš hádat.")
+    print(oddelovac)
+
     tajne_cislo = generuj_tajne_cislo()
     pokus = 0
+
     while True:
         tip = input("Zadej svůj tip: ").strip()
-        # kontrola tipu
-        if je_spravne_cislo(tip):
+        pokus += 1
 
+        # kontrola tipu   
+        if not je_spravne_cislo(tip):
+            print(f"Chyba: {ziskej_chybovou_zpravu(tip)}")
+            print(oddelovac)
+            continue
+
+
+        bulls, cows = spocitat_tip(tip, tajne_cislo)
+        print(f"{oddelovac}\n{vysledek_hrani(bulls, cows)}\n{oddelovac}")
+
+        if bulls == 4:
+            print(f"✅ Správně! Tajný PIN jsi právě uhádl.\nJe to: {tajne_cislo}")
+            print(f"Počet pokusů: {pokus}")
+            break
+
+if __name__ == "__main__":
+    hlavni_hra()
