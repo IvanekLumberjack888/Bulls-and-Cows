@@ -1,22 +1,25 @@
+## Bulls & Cows
 """
 main.py: druhý projekt do Engeto Online Python Akademie
 
 author: Ivo Dolezal
 email: ivousd@seznam.cz
 """
+# Hra býci akravičky. (Kdo nezná, pozná. :-))
+
 # --
 # naimportujeme knihovnu
 import random
 
 oddelovac = "-" * 47
-# --
+
 # generování PIN - fce
 def generuj_tajne_cislo():
     cifry = random.sample("123456789", 1) + random.sample("0123456789", 3)
     while len(set(cifry)) != 4:
         cifry = random.sample("123456789", 1) + random.sample("0123456789", 3)
     return ''.join(cifry)
-# --
+
 # kontrola tipu playera
 def je_spravne_cislo(tip):
      return (
@@ -26,7 +29,7 @@ def je_spravne_cislo(tip):
           tip [0] != '0' and
           all(cif in '0123456789' for cif in tip)
      )
-# --
+
 # zprava co za chybu
 def ziskej_chybovou_zpravu(tip):
     if len(tip) != 4:
@@ -38,7 +41,7 @@ def ziskej_chybovou_zpravu(tip):
     if len(set(tip)) != 4:
         return "Číslice se nesmí opakovat!"
     return "Neplatný vstup!"
-# --
+
 # pocitani tipu
 def spocitat_tip(tip, tajne_cislo):
     bulls = 0
@@ -46,14 +49,14 @@ def spocitat_tip(tip, tajne_cislo):
     bulls = sum(tip_cislo == tajne_cislo_cifra for tip_cislo, tajne_cislo_cifra in zip(tip, tajne_cislo))
     cows = sum(tip_cislo in tajne_cislo for tip_cislo in tip) - bulls
     return bulls, cows
-# --
+
 # vysledek pocitani
 def vysledek_hrani(bulls, cows):
     return (
         f"{bulls} {'býk' if bulls == 1 else 'býci' if bulls != 0 else 'býků'}, " 
         f"{cows} {'kráva' if cows == 1 else 'krávy' if cows !=0 else 'krav'}"
     )
-# --
+
 # hra
 def hlavni_hra():
     print("Ahoj.")
