@@ -120,3 +120,5 @@ def hraj_hru() -> None:
 
 if __name__ == "__main__":
     hraj_hru()
+    
+# Čas refaktoringu 2:37 h
