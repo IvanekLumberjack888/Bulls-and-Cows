@@ -2,7 +2,7 @@ import random
 from typing import Tuple
 
 # Naimportujeme knihovny
-'''
+"""
     main.py: druhý projekt do Engeto Online Python Akademie
     author: Ivo Dolezal
     email: ivousd@seznam.cz
@@ -12,7 +12,7 @@ from typing import Tuple
     Býci jsou správné tipy ne správném místě, krávy jsou správné tipy na špatném místě.
     Hráč zadává tipy, program vyhodnocuje počet správných číslic na správném a špatném místě.
     Hra končí, když hráč uhodne všechna čtyři čísla.
-'''
+"""
 
 # Konstanty
 VERSION = "1.0.5"
@@ -27,14 +27,13 @@ def generuj_tajne_cislo() -> str:
     ostatni = random.sample("0123456789".replace(prvni, ""), 3)
     return prvni + "".join(ostatni)
 
+
 # Kontrola tipu playera (Správný formát)
 def je_spravne_cislo(tip: str) -> bool:
-     return (
-          len(tip) == 4
-          and tip.isdigit()
-          and tip[0] != '0'
-          and len(set(tip)) == 4
-     )  #True, pokud je formát správný, jinak False.
+    return (
+        len(tip) == 4 and tip.isdigit() and tip[0] != "0" and len(set(tip)) == 4
+    )  # True, pokud je formát správný, jinak False.
+
 
 # Zpráva: Co za chybu? Vysvětlí co nesedí
 def ziskej_chybovou_zpravu(tip: str) -> str:
@@ -48,11 +47,13 @@ def ziskej_chybovou_zpravu(tip: str) -> str:
         return "Číslice se nesmí opakovat!"
     return "Neplatný vstup!"
 
+
 # Počítání tipu
 def spocitej_bulls_cows(tip: str, tajne_cislo: str) -> Tuple[int, int]:
     bulls = sum(t == s for t, s in zip(tip, tajne_cislo))
     cows = sum(c in tajne_cislo for c in tip) - bulls
     return bulls, cows
+
 
 # Výsledek počítání - deklinace (český jazyk)
 def formatuj_vysledek(bulls: int, cows: int) -> str:
@@ -73,10 +74,11 @@ def formatuj_vysledek(bulls: int, cows: int) -> str:
         krava_txt = "krav"
     return f"{bulls} {byk_txt}, {cows} {krava_txt}"
 
+
 # Hra - Úvod do hry a pravidla
 def vypis_uvod() -> None:
     print(
-       f"Ahoj.\n{ODDELOVAC}\n"
+        f"Ahoj.\n{ODDELOVAC}\n"
         "👋 Vítej v programu na hádání tajného čísla.\n"
         "Možná to znáš jako hru Bulls & Cows. Tady je CZ verze.\n"
         "'Býk' → správná číslice na správném místě.\n"
@@ -87,19 +89,20 @@ def vypis_uvod() -> None:
         f"{ODDELOVAC}"
     )
 
+
 # Hlavní hra
 def hraj_hru() -> None:
     vypis_uvod()
-    tajne_cislo = generuj_tajne_cislo() 
+    tajne_cislo = generuj_tajne_cislo()
     pokus = 0
 
     # Dokud neuhádne všechy čtyři, jede smyčka
     while True:
         tip = input("Zadej svůj tip (nebo napiš 'exit' pro ukončení): ").strip()
-        if tip.lower() == 'exit':
+        if tip.lower() == "exit":
             print(f"{ODDELOVAC}\nDěkujeme za hru, ahoj! 👋\n{ODDELOVAC}")
             break
-        
+
         if not je_spravne_cislo(tip):
             print(f"Chyba: {ziskej_chybovou_zpravu(tip)}\n{ODDELOVAC}")
             continue
@@ -107,7 +110,7 @@ def hraj_hru() -> None:
         pokus += 1
         bulls, cows = spocitej_bulls_cows(tip, tajne_cislo)
         print(f"{ODDELOVAC}\n{formatuj_vysledek(bulls, cows)}\n{ODDELOVAC}")
-        
+
         if bulls == 4:
             print(
                 f"✅ Správně! Tajný PIN neboli číslo -> jsi právě uhádl. 'Gratulky 🎉'\n"
@@ -118,7 +121,9 @@ def hraj_hru() -> None:
 
             print(f"{ODDELOVAC}\nDěkujeme za hru, ahoj! 👋\n{ODDELOVAC}")
 
+
 if __name__ == "__main__":
     hraj_hru()
+
     
 # Čas refaktoringu 2:37 h
