@@ -1,3 +1,6 @@
+---
+title: bulls_and_cows
+---
 Přehled mých projektů je ne webu: https://ivaneklumberjack888.github.io/#projects
 
 # 🐂 Bulls and Cows
